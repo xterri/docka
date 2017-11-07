@@ -1,0 +1,77 @@
+** Init **
+
+1. set up docker-machine 
+	>> docker-machine --storage-path /tmp/docker create --driver virtualbox <name for machine>
+2. set up the environment (if using storage path, need to "go to" where machine is stored and do env w/ '-s')
+	>> eval $(docker-machine -s /tmp/docker env <machine name>)
+3. create app directory on docker-machine
+	>> docker-machine --storage-path /tmp/docker ssh <machine name> mkdir /home/docker/<project name>
+		- "ssh" >> goes into the docker-machine and runs the commands and stuff
+
+- docker-machine --storage-path is... ?
+
+		-------------------
+
+** Update **
+
+1. copy app/site data to host (on docker-machine)
+	>> docker-machine --storage-path /tmp/docker \
+		scp --delta --recursive ./app/ <machine name>:/home/docker/<project name>
+
+- go to the tmp directory on the docker-machine
+- copy project from host machine to the docker-machine & into the <project folder> in docker-machine
+- 'scp --delta --recursive'
+	- recursive >> copies EVERYTHING in the directory given
+	- delta >> only sends the changes made in the directory / folder
+
+		------------------
+
+** Run/build project/app on server **
+
+1. get docker-machine ip
+		>> $(docker-machine --storage-path /tmp/docker ip <machine name>) 
+			- above saves it as a variable when using '$(...)'
+			- '--storage-path /tmp/docker' necessary?
+2. initialize / update the stack w/ docker compose
+		>> docker-compose up --build
+			- '--build' >> builds / rebuilds services
+
+		-------------------
+
+** Create docker-compose file ** 
+
+1. list version of docker-compose you'll be using
+2. list the services / images / containers to use
+	a. name / title of the service
+		- *list of necessities to run / build the container
+			- image 
+			- environments
+			- ports
+			- build
+			- dependencies
+			- volumes
+			- env_files 
+				>> env_files need to be on the host machine?
+				- env_files >> basically like "environments" section in docker-compose but loads the information from a file
+
+- adminer full-featured database management tool written in PHP, consists of a single file ready to deploy to target server
+
+		---------------------
+
+** Build Dockerfile / image for the project
+
+1. identify the image required for the container
+2. run the updates, upgrades and add build-base
+3. run & add / install the necessities (ex. postgres, php)
+	- configurations needed to make docker, postgres (db), and php to work?
+		- docker-php-ext-configure?
+		- -with-pgsql=/usr/local/pgsql?
+		- docker-php-ext-install pgsql?
+4. set the work directory to the one on the docker-machine (ex. /app)
+5. set entrypoint to execute php when image is run
+6. set command / args with entrypoint to set up the server
+7. expose the container port to same # as the one set in #6's args
+
+		----------------------
+
+

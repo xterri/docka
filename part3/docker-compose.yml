@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+    db:
+        image: postgres:9.6.2-alpine
+        env_file: .db_creds.env
+    adminer:
+        image: adminer
+        ports:
+            - 8080:8080
+    web:
+        build: .
+        depends_on:
+            - db
+        ports:
+            - 3000:3000
+        volumes:
+            - /home/dock/ft_minisho:/app
+        environment:
+            DATABASE_URL: postgres://user@db/minishop_db
+        env_file: .db_creds.env

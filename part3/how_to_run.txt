@@ -1,0 +1,30 @@
+1. initialize and create the docker-machine
+	>> (run) sh init.sh
+
+2. run the image / container
+	>> (run) sh run.sh
+
+- if you get "ERROR: Couldn't connect to Docker daemon. You might need to start Docker for Mac."
+	>> docker-machine start MiniShop			(or include '-s <path>' if included in above)
+	>> eval $(docker-machine env MiniShop)
+
+3. after run, server should be running and you should see colored text to the left
+		ex. db_1			|
+	>> or scroll up and look for:
+		Successfully built d3ab680cf619
+		Successfully tagged 02bonus_web:latest
+		Creating 02bonus_adminer_1 ...
+		Creating 02bonus_adminer_1
+		Creating 02bonus_db_1 ...
+		Creating 02bonus_db_1 ... done
+		Creating 02bonus_web_1 ...
+		Creating 02bonus_web_1 ... done	
+
+4. Set up database at <docker-machine ip address>:<adminer / db port #>
+	- see docker-compose.yml >> adminer for port #
+		>> 192.168.99.100:8080
+	4a. Set 'System' > PostgreSQL
+	4b. Set 'Username' > user
+	4c. Set 'Password' > password
+	4d. Click 'Login'
+	- gives user access to the db
